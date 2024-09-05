@@ -1,10 +1,9 @@
-import { Button, Input, Space } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
 
 const UserPage = () => {
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [donateMoney, setDonateMoney] = useState();
   const [checkSubmit, setCheckSubmit] = useState(false);
@@ -62,6 +61,16 @@ const UserPage = () => {
     }
   }, [checkSubmit]);
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const initRazorpay = (orderId, amount) => {
     const options = {
       key: "rzp_test_Xn4HB4uGySyEym",
@@ -110,40 +119,46 @@ const UserPage = () => {
 
   return (
     <div>
-      <Helmet>
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-      </Helmet>
-      <Space direction="vertical" size={50}>
-        <Input
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          style={{ width: "500px" }}
-          placeholder="first Name"
-        />
-        <Input
-          value={lastName}
-          onChange={(e) => setLirstName(e.target.value)}
-          placeholder="last Name"
-        />
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email"
-        />
-        <Input
-          value={donateMoney}
-          onChange={(e) => setDonateMoney(e.target.value)}
-          placeholder="Enter amount to Donate"
-        />
-        <Button
-          onClick={handleSubmit}
-          type="primary"
-          style={{
-            width: "500px",
-          }}
-        >
-          Donate
-        </Button>
+      <Space direction="vertical" size={20}>
+        <Form layout="vertical">
+          <Form.Item label="First Name">
+            <Input
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First Name"
+            />
+          </Form.Item>
+          <Form.Item label="Last Name">
+            <Input
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Last Name"
+            />
+          </Form.Item>
+          <Form.Item label="Email">
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item label="Donated Money">
+            <Input
+              value={donateMoney}
+              onChange={(e) => setDonateMoney(e.target.value)}
+              placeholder="Enter amount to Donate"
+            />
+          </Form.Item>
+          <Button
+            onClick={handleSubmit}
+            type="primary"
+            style={{
+              width: "500px",
+            }}
+          >
+            Donate
+          </Button>
+        </Form>
       </Space>
     </div>
   );
